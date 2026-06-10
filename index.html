@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prime Ledger Swap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0; padding: 0;
+            /* Dorado Oro Oscuro, Intenso y Brillante */
+            background: linear-gradient(135deg, #61460B 0%, #997412 25%, #D4AF37 50%, #FFE573 75%, #D4AF37 100%);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Selector de Idioma Profesional */
+        .lang-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #D4AF37;
+            border: 2px solid #D4AF37;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            z-index: 1001;
+        }
+
+        .lang-selector option {
+            background: #111;
+            color: #D4AF37;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 65px;
+            margin: 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 19px;
+            font-weight: 600;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .swap-card {
+            background: rgba(0, 0, 0, 0.05);
+            border: 3px solid #000;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 450px;
+        }
+
+        .swap-button {
+            background: #000;
+            color: #D4AF37;
+            border: none;
+            padding: 22px 45px;
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 25px;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+
+        .swap-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Correo electrónico posicionado abajo del todo, ajustado de forma segura */
+        .footer {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        /* El Librito para el Chatbot */
+        .book-chat-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background: #000;
+            width: 70px;
+            height: 95px;
+            border-radius: 4px 15px 15px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .book-chat-btn:hover { transform: scale(1.1); }
+        .book-chat-btn i { color: #D4AF37; font-size: 35px; }
+
+        /* Estilos de la ventana del Chatbot */
+        .chat-window {
+            position: fixed;
+            bottom: 150px;
+            right: 40px;
+            width: 380px;
+            height: 500px;
+            background: #111;
+            border: 3px solid #D4AF37;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 999;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .chat-header {
+            background: #D4AF37;
+            color: #000;
+            padding: 15px;
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header i { cursor: pointer; }
+
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            color: #fff;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bot-msg {
+            background: #222;
+            padding: 12px;
+            border-radius: 8px;
+            align-self: flex-start;
+            border-left: 3px solid #D4AF37;
+            max-width: 85%;
+        }
+
+        .user-msg {
+            background: #D4AF37;
+            color: #000;
+            padding: 12px;
+            border-radius: 8px;
+            align-self: flex-end;
+            max-width: 85%;
+            font-weight: 600;
+        }
+
+        .chat-footer {
+            padding: 15px;
+            background: #000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background: #222;
+            color: #fff;
+            outline: none;
+        }
+
+        .send-btn {
+            background: #D4AF37;
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+    </style>
+</head>
+<body>
+
+    <select class="lang-selector" id="langSelect" onchange="cambiarIdioma()">
+        <option value="es">Español</option>
+        <option value="en">English</option>
+    </select>
+
+    <div class="header">
+        <h1>PRIME LEDGER SWAP</h1>
+        <div class="subtitle" id="subTitleText">Ventanilla OTC: Plataforma de intercambio especializado en la red de bitcoin</div>
+    </div>
+
+    <div class="swap-card">
+        <i class="fa-solid fa-building-columns" style="font-size: 50px; margin-bottom: 25px;"></i>
+        <p style="font-weight: 600;" id="cardTitleText">Intercambio Institucional Seguro</p>
+        <button class="swap-button" id="swapBtnText" onclick="rutearRedBitcoin()">Hacer Intercambio</button>
+    </div>
+
+    <div class="footer">
+        pandaorizont@gmail.com
+    </div>
+
+    <div class="book-chat-btn" title="Asistente Ledger" onclick="toggleChat()">
+        <i class="fa-solid fa-book"></i>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span id="chatTitleText">The Ledger - Asistente Virtual</span>
+            <i class="fa-solid fa-xmark" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="bot-msg" id="botMsgInit">Sistema en línea. Bienvenido a Prime Ledger Swap. Soy The Ledger, computador central de operaciones. ¿Qué consulta financiera desea realizar en la red de Bitcoin?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Escriba su consulta técnica..." onkeypress="if(event.key === 'Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // Diccionario de traducciones profesional
+        const traducciones = {
+            es: {
+                sub: "Ventanilla OTC: Plataforma de intercambio especializado en la red de bitcoin",
+                card: "Intercambio Institucional Seguro",
+                btn: "Hacer Intercambio",
+                chatTitle: "The Ledger - Asistente Virtual",
+                botInit: "Sistema en línea. Bienvenido a Prime Ledger Swap. Soy The Ledger, computador central de operaciones. ¿Qué consulta financiera desea realizar en la red de Bitcoin?",
+                botReply: "Transacción procesada en el nodo central. Para intercambios de alto volumen en la red Bitcoin, verifique la liquidez de sus activos antes de firmar. ¿Requiere estado de comisiones (mempool)?",
+                inputPlaceholder: "Escriba su consulta técnica..."
+            },
+            en: {
+                sub: "OTC Desk: Specialized exchange platform on the Bitcoin network",
+                card: "Secure Institutional Exchange",
+                btn: "Execute Swap",
+                chatTitle: "The Ledger - Virtual Assistant",
+                botInit: "System online. Welcome to Prime Ledger Swap. I am The Ledger, central operations computer. What financial inquiry would you like to perform on the Bitcoin network?",
+                botReply: "Transaction processed at the central node. For high-volume exchanges on the Bitcoin network, please verify your asset liquidity before signing. Do you require mempool fee status?",
+                inputPlaceholder: "Type your technical inquiry..."
+            }
+        };
+
+        // Función de cambio de idioma nativa
+        function cambiarIdioma() {
+            const lang = document.getElementById("langSelect").value;
+            
+            document.getElementById("subTitleText").innerText = traducciones[lang].sub;
+            document.getElementById("cardTitleText").innerText = traducciones[lang].card;
+            document.getElementById("swapBtnText").innerText = traducciones[lang].btn;
+            document.getElementById("chatTitleText").innerText = traducciones[lang].chatTitle;
+            document.getElementById("botMsgInit").innerText = traducciones[lang].botInit;
+            document.getElementById("chatInput").placeholder = traducciones[lang].inputPlaceholder;
+            
+            // Cambiar idioma de placeholder global
+            localStorage.setItem("idiomaSitio", lang);
+        }
+
+        // Funcionalidad del ChatBot
+        function toggleChat() {
+            const chat = document.getElementById("chatWindow");
+            if (chat.style.display === "none" || chat.style.display === "") {
+                chat.style.display = "flex";
+            } else {
+                chat.style.display = "none";
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (text === "") return;
+
+            const chatBody = document.getElementById("chatBody");
+            const userMsg = document.createElement("div");
+            userMsg.className = "user-msg";
+            userMsg.innerText = text;
+            chatBody.appendChild(userMsg);
+
+            input.value = "";
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            setTimeout(() => {
+                const lang = document.getElementById("langSelect").value;
+                const botMsg = document.createElement("div");
+                botMsg.className = "bot-msg";
+                botMsg.innerText = traducciones[lang].botReply;
+                chatBody.appendChild(botMsg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1000);
+        }
+
+        // Redirección directa a la red / pasarela de Bitcoin
+        function rutearRedBitcoin() {
+            window.open("https://boltz.exchange/", "_blank");
+
+            console.log("--- RUTA DE INTERCAMBIO INICIADA ---");
+            console.log("Red ruteada: Bitcoin / Lightning Network Capa 2.");
+            console.log("Billetera comisionista configurada en base de datos: bc1qhurc7z0kvpkx7tywazrjn5upwkz96yrfafxump");
+        }
+    </script>
+
+</body>
+</html>
